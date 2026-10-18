@@ -156,7 +156,6 @@ The following is an illustrative structure for organizing the project. Adapt the
 facial-emotion-music-recommendation/
 │
 ├── .git/                                  # Git version control data
-├── __pycache__/                           # Python bytecode cache
 ├── .spotify_cache                         # Spotify authentication cache
 │
 ├── facialmodeltrainingnotebook.ipynb      # Jupyter notebook for model training
