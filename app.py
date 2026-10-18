@@ -1,8 +1,8 @@
 import streamlit as st
 import base64
 import random
-import time
 from modelClasses import emotionRecogniationSystem, musicRecommendationSystem
+import time
 
 st.markdown("## 🎵 MoodTune", text_alignment='center')
 st.markdown("### Music that matches your mood", text_alignment='center')
@@ -35,7 +35,7 @@ def getBase64Image(image_path):
 
 def buttonClick(active: str):
     if active == 'action_btn1':
-        emotionRecogniationSystem().run()
+        emotionRecogniationSystem('facial_model_raf_best.keras').run()
     st.session_state[active] = True
     if st.session_state['status'] >= 66:
         st.session_state['status'] = 100
@@ -43,7 +43,7 @@ def buttonClick(active: str):
     st.session_state['status'] += 33
 
 def analyzeEmotion():
-    ans = random.choice(['HAPPY', 'NEUTRAL'])
+    ans = random.choice(['Happy', 'Neutral'])
     st.session_state['res_emotion'] = ans
     buttonClick(active = 'action_btn2')
 
@@ -78,8 +78,9 @@ with st.columns(1, border = True,)[0]:
     st.space(10)
 
 emotion = {
-    'HAPPY': '😊',
-    'NEUTRAL': '😐',
+    'Happy': '😊',
+    'Neutral': '😐',
+    'Surprise': '',
 }
 
 with st.columns(1, border = True)[0]:
