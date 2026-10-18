@@ -23,6 +23,7 @@ class emotionRecogniationSystem:
         self.__history = []
 
     def run(self):
+        self.__history.clear()
         cap = cv2.VideoCapture(0)
 
         if not cap.isOpened():
@@ -31,18 +32,18 @@ class emotionRecogniationSystem:
 
         print('Camera is Opened.....')
         openTime = datetime.now()
-
         while True:
             frameRead, frame = cap.read()
             if not frameRead: break
 
-            duration = 500 - (datetime.now() - openTime).seconds
+            frame = cv2.convertScaleAbs(frame, alpha = 1.0, beta = 30)
+            duration = 15 - (datetime.now() - openTime).seconds
 
             # Getting Ready ot the user
-            if duration > 496:
+            if duration > 6:
                 frame[:] = 0
                 cv2.putText (
-                    frame, 'Get Ready', (0, 50), cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 255, 0), 4
+                    frame, "Get Ready Don't change the emotion.", (0, 50), cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 255, 0), 4
                 )
 
             # Captureing the user Eomition 
@@ -52,9 +53,7 @@ class emotionRecogniationSystem:
 
                 # Predecting the facial Expression.
                 emotion = self.__emotionRecogniation(face)
-                cv2.putText (
-                        frame, f'{emotion}', (0, 50), cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 255, 0), 4
-                )
+                self.__history.append(emotion)
             
             cv2.imshow('Live Frames', frame)    
             cv2.waitKey(1)
@@ -65,7 +64,6 @@ class emotionRecogniationSystem:
 
         cap.release()
         cv2.destroyAllWindows()
-        return emotion
 
     def __faceDetection(self, frame):
         h, w, _ = frame.shape
@@ -102,6 +100,16 @@ class emotionRecogniationSystem:
             print(e)
             return None
 
+    def getEmotion(self):
+        cnt = {}
+        for emotion in self.__history:
+            cnt[emotion] = cnt.get(emotion, 0) + 1
+
+        max, res = 0, None
+        for emotion in cnt:
+            max, res = (cnt[emotion], emotion) if max < cnt[emotion] else (max, res)
+        return res
+
 
 class musicRecommendationSystem:
     def __init__(self, clientId, clientSecret, redirectUrl):
@@ -137,7 +145,6 @@ class musicRecommendationSystem:
             name = self.__sp.search(
                 q = preference,
                 type = 'track',
-                market = ['US', 'IN']
             )['tracks']['items']
 
             return [
@@ -176,5 +183,3 @@ class musicRecommendationSystem:
         except SpotifyException as e:
             print(e)
 
-
-emotionRecogniationSystem('facial_model_raf_best.keras').run()

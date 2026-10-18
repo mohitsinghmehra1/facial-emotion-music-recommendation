@@ -25,6 +25,9 @@ if 'action_btn3' not in st.session_state:
 if 'musicSystem' not in st.session_state:
     st.session_state['musicSystem'] = musicRecommendationSystem('9cc6000b894141e0a25ca44d7648762c', '9beb79b537b243fbba425420f556df25', 'http://127.0.0.1:9090/callback')
 
+if 'emotionDetectionSystem' not in st.session_state:
+    st.session_state['emotionDetectionSystem'] = emotionRecogniationSystem('facial_model_raf_best.keras')
+
 if 'songs' not in st.session_state:
     st.session_state.songs = None
 
@@ -35,7 +38,7 @@ def getBase64Image(image_path):
 
 def buttonClick(active: str):
     if active == 'action_btn1':
-        emotionRecogniationSystem('facial_model_raf_best.keras').run()
+        st.session_state['emotionDetectionSystem'].run()
     st.session_state[active] = True
     if st.session_state['status'] >= 66:
         st.session_state['status'] = 100
@@ -43,13 +46,20 @@ def buttonClick(active: str):
     st.session_state['status'] += 33
 
 def analyzeEmotion():
-    ans = random.choice(['Happy', 'Neutral'])
-    st.session_state['res_emotion'] = ans
+    st.session_state['res_emotion'] = st.session_state['emotionDetectionSystem'].getEmotion()
+    del st.session_state['emotionDetectionSystem']
     buttonClick(active = 'action_btn2')
 
 def recommendeSong():
     buttonClick(active = 'action_btn3')
-    st.session_state['songs'] = st.session_state['musicSystem'].recommendeSong('Lover Song', n = 3)
+    emotion_queries = {
+        "Happy": "cheerful upbeat feel good English songs",
+        "Sad": "sad emotional heartbreak Hindi songs",
+        "Angry": "aggressive intense rage rock Hindi or English songs",
+        "Surprise": "surprising unexpected dramatic exciting energetic English songs",
+        "Neutral": "calm mellow soft background easy listening English songs"
+    }
+    st.session_state['songs'] = st.session_state['musicSystem'].recommendeSong(emotion_queries[st.session_state['res_emotion']], n = 3)
     time.sleep(0.7)
 
     
@@ -80,7 +90,9 @@ with st.columns(1, border = True,)[0]:
 emotion = {
     'Happy': '😊',
     'Neutral': '😐',
-    'Surprise': '',
+    'Surprise': '😲',
+    'Angry': '😡',
+    'Sad': '😢'
 }
 
 with st.columns(1, border = True)[0]:
