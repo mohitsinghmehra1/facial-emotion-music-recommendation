@@ -1,4 +1,4 @@
-# 🎵 Facial Emotion Music Recommendation
+# 🎵 Facial Expression Recogniation and Music Recommendation System
 
 An AI-powered music recommendation system that detects a user's facial emotion through a live camera feed and recommends songs that match their mood.
 
@@ -20,10 +20,9 @@ This project uses **Deep Learning, Computer Vision, and the Spotify API** to ana
 |---|---|
 | Python | Core programming language |
 | Streamlit | Interactive web application interface |
-| Keras | Deep learning model development |
+| TensorFlow | Deep learning model development |
 | OpenCV | Camera access and image processing |
-| EfficientNet | CNN architecture for facial emotion recognition |
-| Transfer Learning | Leverage pretrained model features for emotion classification |
+| EfficientNet | CNN architecture for facial emotion recognition Leverage pretrained model features for emotion classification 
 | Spotify API | Fetch music recommendations based on detected emotions |
 
 ## 🚀 How It Works
